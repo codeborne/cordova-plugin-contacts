@@ -999,6 +999,13 @@ let kW3ContactUrls = "urls"
             if value != nil {
                 nc[kW3ContactPhoneNumbers] = value
             }
+
+            // emails array
+            // NSLog(@"getting emails");
+            value = extractMultiValue(kW3ContactEmails)
+            if value != nil {
+                nc[kW3ContactEmails] = value
+            }
             return nc
         } else {
             // if no returnFields specified, W3C says to return empty contact (but Cordova will at least return id)
