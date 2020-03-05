@@ -50,7 +50,8 @@ class CDVNewContactsController: CNContactViewController {
                                                     CNContactNamePrefixKey as CNKeyDescriptor,
                                                     CNContactNameSuffixKey as CNKeyDescriptor,
                                                     CNContactPhoneNumbersKey as CNKeyDescriptor,
-                                                    CNContactTypeKey as CNKeyDescriptor]
+                                                    CNContactTypeKey as CNKeyDescriptor,
+                                                    CNContactEmailAddressesKey as CNKeyDescriptor]
     
     // overridden to clean up Contact statics
     override func onAppTerminate() {
