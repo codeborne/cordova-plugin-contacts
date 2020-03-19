@@ -57,22 +57,24 @@ class CDVNewContactsController: CNContactViewController {
         // NSLog(@"Contacts::onAppTerminate");
     }
     
-    func checkContactPermission(command: CDVInvokedUrlCommand, accessGrantedCallback: @escaping (CDVInvokedUrlCommand)->()) {
+    func checkContactPermission(command: CDVInvokedUrlCommand, callback: @escaping (CDVInvokedUrlCommand)->()) {
         // if no permissions granted try to request them first
         let status = CNContactStore.authorizationStatus(for: .contacts)
         if status == .notDetermined {
             CNContactStore().requestAccess(for: CNEntityType.contacts, completionHandler: {(_ granted: Bool, _ error: Error?) -> Void in
                 if granted {
                     print("Access granted.")
-                    accessGrantedCallback(command)
                 }
+                callback(command)
             })
+        } else {
+            callback(command)
         }
     }
     
     // iPhone only method to create a new contact through the GUI
     func newContact(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let callbackId: String = command.callbackId
             let weakSelf: CDVContacts? = self
             
@@ -98,7 +100,7 @@ class CDVNewContactsController: CNContactViewController {
     }
     
     func displayContact(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let callbackId: String = command.callbackId
             let weakSelf: CDVContacts? = self
             
@@ -149,7 +151,7 @@ class CDVNewContactsController: CNContactViewController {
 //    }
     
     func chooseContact(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let weakSelf: CDVContacts? = self
             let callbackId: String = command.callbackId
             let commandFields = command.argument(at: 0, withDefault: [Any]()) as? [Any]
@@ -189,7 +191,7 @@ class CDVNewContactsController: CNContactViewController {
     }
     
     func pickContact(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let weakSelf: CDVContacts? = self
             let newCommand = CDVInvokedUrlCommand(arguments: command.arguments, callbackId: command.callbackId, className: command.className, methodName: command.methodName)
             // First check for Address book permissions
@@ -328,7 +330,7 @@ class CDVNewContactsController: CNContactViewController {
     }
     
     @objc func search(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let callbackId: String = command.callbackId
             let commandFields = command.argument(at: 0) as? [Any]
             let findOptions = command.argument(at: 1, withDefault: [AnyHashable: Any]()) as? [AnyHashable: Any]
@@ -421,7 +423,7 @@ class CDVNewContactsController: CNContactViewController {
     }
     
     func save(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let callbackId: String = command.callbackId
             let commandContactDict = command.argument(at: 0) as? [AnyHashable: Any]
 
@@ -510,7 +512,7 @@ class CDVNewContactsController: CNContactViewController {
     }
     
     func remove(_ command: CDVInvokedUrlCommand) {
-        checkContactPermission(command: command, accessGrantedCallback: { (command) in
+        checkContactPermission(command: command, callback: { (command) in
             let callbackId: String = command.callbackId
             let commandcId = command.argument(at: 0) as? String
             let weakSelf: CDVContacts? = self
